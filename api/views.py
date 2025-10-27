@@ -1,65 +1,51 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from rest_framework import generics
+from rest_framework import viewsets, permissions, generics
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from .serializers import UserSerializer, CamerasSerializer, EnderecoSerializer, LinkRTSPSerializer
-from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Cameras, LinkRTSP, Endereco
 
-class CamerasListCreate(generics.ListCreateAPIView):
+class CamerasViewSet(viewsets.ModelViewSet):
     serializer_class = CamerasSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Cameras.objects.all()
 
     def get_queryset(self):
-        user = self.request.user
-        return Cameras.objects.filter(cliente=user)
+        return Cameras.objects.filter(cliente=self.request.user)
     
     def perform_create(self, serializer):
-        if serializer.is_valid():
-            serializer.save(author=self.request.user)
-        else:
-            print(serializer.errors)
+        serializer.save(cliente=self.request.user)
             
-class CamerasDelete(generics.DestroyAPIView):
-    serializer_class = CamerasSerializer
-    permission_classes = [IsAuthenticated]
+    @action(detail=True, methods=['get'])
+    def gerar_link_rtsp(self, request, pk=None):
+        camera = self.get_object()
+        link_rtsp = f"rtsp://{camera.user}:{camera.senha}@{camera.dominio}:{camera.porta_rtsp}/cam/realmonitor?channel=1&subtype=0"
+        
+        LinkRTSP.objects.create(camera=camera, rtsp=link_rtsp)
 
-    def get_queryset(self):
-        user = self.request.user
-        return Cameras.objects.filter(cliente=user)
+        return Response({
+            'link_rtsp': link_rtsp,
+            'mensagem': 'Link RTSP gerado com sucesso'
+        })
     
-class EnderecoListCreate(generics.ListCreateAPIView):
+class EnderecoViewSet(viewsets.ModelViewSet):
     serializer_class = EnderecoSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Endereco.objects.all()
 
     def get_queryset(self):
-        user = self.request.user
-        return Endereco.objects.filter(camera=user)
+        return Endereco.objects.filter(camera__cliente=self.request.user)
     
-class EnderecoDelete(generics.DestroyAPIView):
-    serializer_class = EnderecoSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        user = self.request.user
-        return Endereco.objects.filter(camera=user)
-    
-class LinkRTSPListCreate(generics.ListCreateAPIView):
+class LinkRTSPViewSet(viewsets.ModelViewSet):
     serializer_class = LinkRTSPSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        user = self.request.user
-        return LinkRTSP.objects.filter(camera=user)
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = LinkRTSP.objects.all()
     
-class LinkRTSPDelete(generics.DestroyAPIView):
-    serializer_class = LinkRTSPSerializer
-    permission_classes = [IsAuthenticated]
-
     def get_queryset(self):
-        user = self.request.user
-        return LinkRTSP.objects.filter(camera=user)
+        return LinkRTSP.objects.filter(camera__cliente=self.request.user)
     
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [permissions.AllowAny]

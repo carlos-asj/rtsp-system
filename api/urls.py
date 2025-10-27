@@ -1,7 +1,13 @@
-from django.urls import path
-from . import views
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import CamerasViewSet, LinkRTSPViewSet, EnderecoViewSet
+
+router = DefaultRouter()
+router.register(r'cameras', CamerasViewSet, basename='cameras')
+router.register(r'link-rtsp', LinkRTSPViewSet, basename='link-rtsp')
+router.register(r'endereco', EnderecoViewSet, basename='enderecos')
 
 urlpatterns = [
-    path("cameras/", views.CamerasListCreate.as_view(), name="camera-list"),
-    path("camerasdelete/<int:pk>/", views.CamerasDelete.as_view(), name="delete-camera")
+    path('', include(router.urls)),
+    
 ]

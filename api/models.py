@@ -1,25 +1,26 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class LinkRTSP(models.Model):
-    link = models.CharField(max_length=50)
-    
-    def __str__(self):
-        return self.rtsp
-
 class Cameras(models.Model):
     titulo = models.CharField(max_length=50)
     user = models.CharField(max_length=20)
     senha = models.CharField(max_length=50)
+    porta_rtsp = models.CharField(max_length=20, default='554')
     dominio = models.CharField(max_length=20)
     ns = models.CharField(max_length=50)
     mac = models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
     cliente = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cams")
-    link_rtsp = models.ForeignKey(LinkRTSP, on_delete=models.CASCADE, related_name="rtsp")
     
     def __str__(self):
         return self.titulo
+    
+class LinkRTSP(models.Model):
+    camera = models.ForeignKey(Cameras, on_delete=models.CASCADE, related_name="camera")
+    link = models.CharField(max_length=255)
+    
+    def __str__(self):
+        return self.link
     
 class Endereco(models.Model):
     camera = models.ForeignKey(Cameras, on_delete=models.CASCADE, related_name="endereco")
