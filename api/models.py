@@ -17,7 +17,7 @@ class Cameras(models.Model):
     
 class LinkRTSP(models.Model):
     camera = models.ForeignKey(Cameras, on_delete=models.CASCADE, related_name="camera")
-    link = models.CharField(max_length=255)
+    rtsp = models.CharField(max_length=255)
     
     def __str__(self):
         return self.link
