@@ -52,6 +52,7 @@ class CamerasSerializer(serializers.ModelSerializer):
         link_rtsp = f"rtsp://{instance.user}:{instance.senha}@{instance.dominio}:{instance.porta_rtsp}/cam/realmonitor?channel=1&subtype=0"
         
         instance.link_rtsp.all().delete()
+        
         LinkRTSP.objects.create(camera=instance, rtsp=link_rtsp)
 
         return instance

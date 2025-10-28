@@ -16,11 +16,11 @@ class Cameras(models.Model):
         return self.titulo
     
 class LinkRTSP(models.Model):
-    camera = models.ForeignKey(Cameras, on_delete=models.CASCADE, related_name="camera")
+    camera = models.ForeignKey(Cameras, on_delete=models.CASCADE, related_name="link_rtsp")
     rtsp = models.CharField(max_length=255)
     
     def __str__(self):
-        return self.link
+        return self.rtsp
     
 class Endereco(models.Model):
     camera = models.ForeignKey(Cameras, on_delete=models.CASCADE, related_name="endereco")

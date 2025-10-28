@@ -9,5 +9,4 @@ router.register(r'endereco', EnderecoViewSet, basename='enderecos')
 
 urlpatterns = [
     path('', include(router.urls)),
-    
 ]
