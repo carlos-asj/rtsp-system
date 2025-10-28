@@ -38,7 +38,7 @@ REST_FRAMEWORK = {
     ),
 }
 
-SIMPLE_JWP = {
+SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
@@ -98,6 +98,7 @@ DATABASES = {
     }
 }
 
+GEOCODING_SERVICE = 'nominatim'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

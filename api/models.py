@@ -29,6 +29,19 @@ class Endereco(models.Model):
     bairro = models.CharField(max_length=100)
     cidade = models.CharField(max_length=100)
     estado = models.CharField(max_length=2)
+    num = models.CharField(max_length=10, blank=True, null=True)
+    lat = models.FloatField(blank=True, null=True)
+    lon = models.FloatField(blank=True, null=True)
     
     def __str__(self):
-        return self.bairro
+        return f"{self.rua}, {self.bairro}-{self.estado}"
+    
+class Torres(models.Model):
+    nome = models.CharField(max_length=255, default="n/a")
+    cameras = models.ForeignKey(Cameras, on_delete=models.CASCADE, related_name="torre")
+    usuarios = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_torres")
+    usuarios_autorizados = models.ManyToManyField(User, related_name="torres_acesso", blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.nome
