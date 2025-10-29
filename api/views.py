@@ -13,7 +13,12 @@ class CamerasViewSet(viewsets.ModelViewSet):
     queryset = Cameras.objects.all()
 
     def get_queryset(self):
-        return Cameras.objects.filter(cliente=self.request.user)
+        user = self.request.user
+        
+        if user.is_superuser:
+            return Cameras.objects.all()
+        else:
+            return Cameras.objects.filter(cliente=user)
     
     def perform_create(self, serializer):
         serializer.save(cliente=self.request.user)
@@ -51,23 +56,25 @@ class CreateUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]
     
-class UserViewSet(viewsets.ViewSet):
-    """
-    ViewSet para usuários - usando ViewSet básico para evitar problemas
-    """
+class UserViewSet(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
+    queryset = User.objects.all()
     
     def list(self, request):
-        """
-        Lista todos os usuários
-        URL: GET /api/users/
-        """
+        users = self.request.user
+        
         try:
-            users = User.objects.all().values('id', 'username', 'email', 'is_active')
-            return Response({
-                'count': users.count(),
-                'users': list(users)
-            })
+            if users.is_superuser:
+                users = User.objects.all().values('id', 'username')
+                return Response({
+                    'count': users.count(),
+                    'users': list(users)
+                })
+            else:
+                return Response({
+                    'Apenas o admin pode ver os usuários'
+                })
         except Exception as e:
             return Response(
                 {'error': f'Erro ao listar usuários: {str(e)}'},
@@ -77,7 +84,6 @@ class UserViewSet(viewsets.ViewSet):
     def retrieve(self, request, pk=None):
         """
         Detalhes de um usuário específico
-        URL: GET /api/users/1/
         """
         try:
             user = User.objects.get(pk=pk)
@@ -94,6 +100,8 @@ class UserViewSet(viewsets.ViewSet):
                 {'error': 'Usuário não encontrado'}, 
                 status=status.HTTP_404_NOT_FOUND
             )
+            
+            
     
     @action(detail=False, methods=['get'])
     def me(self, request):
@@ -125,72 +133,3 @@ class TorresViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(criador=self.request.user)
     
-    @action(detail=True, methods=['post'])
-    def adicionar_usuario(self, request, pk=None):
-        torre = self.get_object()
-        
-        if not torre.usuarios_autorizados.filter(id=request.user.id).exists():
-            return Response(
-                {'erro': 'Você não tem permissão para modificar esta torre'},
-                status=status.HTTP_403_FORBIDDEN
-            )
-        
-        usuario_id = request.data.get('usuario_id')
-        if not usuario_id:
-            return Response(
-                {'erro': 'O campo usuario_id é obrigatório'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        try:
-            usuario = User.objects.get(id=usuario_id)
-            torre.usuarios_autorizados.add(usuario)
-            
-            return Response({
-                'mensagem': f'Usuário {usuario.username} adicionado com sucesso à torre {torre.nome}',
-                'total_usuarios': torre.usuarios_autorizados.count()
-            })
-            
-        except User.DoesNotExist:
-            return Response(
-                {'erro': 'Usuário não encontrado'},
-                status=status.HTTP_404_NOT_FOUND
-            )
-    
-    @action(detail=True, methods=['post'])
-    def remover_usuario(self, request, pk=None):
-        torre = self.get_object()
-        
-        if not torre.usuarios_autorizados.filter(id=request.user.id).exists():
-            return Response(
-                {'erro': 'Você não tem permissão para modificar esta torre'},
-                status=status.HTTP_403_FORBIDDEN
-            )
-        
-        usuario_id = request.data.get('usuario_id')
-        if not usuario_id:
-            return Response(
-                {'erro': 'O campo usuario_id é obrigatório'},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        
-        try:
-            usuario = User.objects.get(id=usuario_id)
-            torre.usuarios_autorizados.remove(usuario)
-            
-            return Response({
-                'mensagem': f'Usuário {usuario.username} removido com sucesso da torre {torre.nome}',
-                'total_usuarios': torre.usuarios_autorizados.count()
-            })
-            
-        except User.DoesNotExist:
-            return Response(
-                {'erro': 'Usuário não encontrado'},
-                status=status.HTTP_404_NOT_FOUND
-            )
-    
-    @action(detail=False, methods=['get'])
-    def minhas_torres(self, request):
-        torres = self.get_queryset()
-        serializer = self.get_serializer(torres, many=True)
-        return Response(serializer.data)

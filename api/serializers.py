@@ -13,6 +13,17 @@ class UserSerializer(serializers.ModelSerializer):
         print(validated_data)
         user = User.objects.create_user(**validated_data)
         return user
+    
+    def update(self, instance, validated_data):
+        password = validated_data.pop('password', None)
+        
+        instance = super().update(instance, validated_data)
+        
+        if password:
+            instance.set_password(password)
+            instance.save()
+        
+        return instance
 
 class UserListSerializer(serializers.ModelSerializer):
     total_torres = serializers.SerializerMethodField()
@@ -23,14 +34,8 @@ class UserListSerializer(serializers.ModelSerializer):
             'id', 
             'username', 
             'email', 
-            'first_name', 
-            'last_name',
-            'is_active',
-            'date_joined',
-            'last_login',
             'total_torres'
         ]
-        read_only_fields = ['id', 'date_joined', 'last_login']
     
     def get_total_torres(self, obj):
         """Retorna o total de torres que o usuário tem acesso"""
@@ -93,6 +98,14 @@ class CamerasSerializer(serializers.ModelSerializer):
         
     def get_link_rtsp_gerado(self, obj):
             return f"rtsp://{obj.user}:{obj.senha}@{obj.dominio}:{obj.porta_rtsp}/cam/realmonitor?channel=1&subtype=0"
+    
+    def get_torre_atual_info(self, obj):
+        if obj.torre_atual:
+            return {
+                'id': obj.torre_atual.id,
+                'titulo': obj.torre_atual.titulo
+            }
+        return None
         
     def create(self, validated_data):
         camera = Cameras.objects.create(**validated_data)
@@ -104,6 +117,11 @@ class CamerasSerializer(serializers.ModelSerializer):
     
     def update(self, instance, validated_data):
         instance = super().update(instance, validated_data)
+        torre_nova = validated_data.get('torre_atual')
+        torre_antiga = instance.torre_atual
+        
+        if torre_nova != torre_antiga:
+            print(f"Movendo câmera {instance.titulo} da torre {torre_antiga} para {torre_nova}")
         
         link_rtsp = f"rtsp://{instance.user}:{instance.senha}@{instance.dominio}:{instance.porta_rtsp}/cam/realmonitor?channel=1&subtype=0"
         
@@ -115,40 +133,50 @@ class CamerasSerializer(serializers.ModelSerializer):
     
 class TorresSerializer(serializers.ModelSerializer):
     criador = serializers.CharField(source='user_torres.username', read_only=True)
-    user_list = serializers.SerializerMethodField()
-    total_users = serializers.SerializerMethodField()
+    cams_torres = CamerasSerializer(many=True, read_only=True, source='cameras_torre') # 'cameras_torre' related_name do campo torre_atual
+    
+    add_cams_torre = serializers.ListField(
+        child=serializers.IntegerField(),
+        write_only=True,
+        required=False
+       # help_text="Lista de IDs de câmeras para adicionar à torre"
+    )
     
     class Meta:
         model = Torres
-        fields = ["titulo", "cameras", "usuarios", "usuarios_autorizados", "criador ", "created_at"]
-        extra_kwargs = {"criador": {"read_only": True},
-                        "usuarios_autorizados": {"write_only": True}}
+        fields = ["id", "titulo", "cams_torres", "cams_details", "usuarios", "usuarios_autorizados", "criador", "created_at"]
         
-    def get_usu_aut_list(self, obj):
-        return obj.usuarios_autorizados.count()
     
     def create(self, validated_data):
         usuarios_data = validated_data.pop('usuarios_autorizados', [])
+        cameras_data = validated_data.pop('cams_torres', [])
         
         torre = Torres.objects.create(**validated_data)
         
         # Adiciona os usuários autorizados
         if usuarios_data:
             torre.usuarios_autorizados.set(usuarios_data)
+            
+        if cameras_data:
+            torre.cams_torres.set(cameras_data)
         
-        # Sempre adiciona o usuário que criou como autorizado
         torre.usuarios_autorizados.add(self.context['request'].user)
         
         return torre
     
     def update(self, instance, validated_data):
         usuarios_data = validated_data.pop('usuarios_autorizados', None)
+        cameras_data = validated_data.pop('cams_torres', None)
         
         # Atualiza os outros campos
         instance = super().update(instance, validated_data)
         
+        
         # Atualiza os usuários autorizados se fornecidos
         if usuarios_data is not None:
             instance.usuarios_autorizados.set(usuarios_data)
+        
+        if cameras_data is not None:
+            instance.cams_torres.set(cameras_data)
         
         return instance

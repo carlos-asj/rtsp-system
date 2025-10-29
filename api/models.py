@@ -11,9 +11,14 @@ class Cameras(models.Model):
     mac = models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
     cliente = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cams")
+    torre_atual = models.ForeignKey('Torres', on_delete=models.SET_NULL, related_name="cameras_torre", blank=True, null=True, verbose_name="Torre atual")
     
     def __str__(self):
         return self.titulo
+    
+    def clean(self):
+        if self.torre_atual and self.torre_atual not in self.cliente.torres_acesso.all():
+            raise ValidationError("Você não tem permissão para associar esta câmera a esta torre")
     
 class LinkRTSP(models.Model):
     camera = models.ForeignKey(Cameras, on_delete=models.CASCADE, related_name="link_rtsp")
@@ -37,11 +42,12 @@ class Endereco(models.Model):
         return f"{self.rua}, {self.bairro}-{self.estado}"
     
 class Torres(models.Model):
-    nome = models.CharField(max_length=255, default="n/a")
-    cameras = models.ForeignKey(Cameras, on_delete=models.CASCADE, related_name="torre")
-    usuarios = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_torres")
+    titulo = models.CharField(max_length=255, default="n/a")
+    cams_torres = models.ManyToManyField(Cameras, related_name="torres", blank=True)
+    usuarios = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_torres", null=True)
     usuarios_autorizados = models.ManyToManyField(User, related_name="torres_acesso", blank=True)
+    criador = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        return self.nome
+        return self.titulo
