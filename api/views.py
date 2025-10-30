@@ -135,12 +135,14 @@ class TorresViewSet(viewsets.ModelViewSet):
         
     def get_permissions(self):
         if self.action in ['add_user', 'remove_user', 'list_users']:
-            return [permissions.IsAdminUser()]
+            return [permissions.IsAuthenticated()]
         return [permissions.IsAuthenticated()]
     
     def perform_create(self, serializer):
         torre = serializer.save(criador=self.request.user)
-        torre.usuarios_autorizados.add(self.request.user)
+        
+        if self.request.user not in torre.usuarios_autorizados.all():
+            torre.usuarios_autorizados.add(self.request.user)
         
     @action(detail=True, methods=['post'])
     def add_user(self, request, pk=None):
@@ -149,8 +151,12 @@ class TorresViewSet(viewsets.ModelViewSet):
         
         try:
             usuario = User.objects.get(id=usuario_id)
-
-            torre.usuarios_autorizados.add(usuario)
+            if request.user.is_superuser or usuario == torre.criador:
+                torre.usuarios_autorizados.add(usuario)
+            else:
+                return Response(
+                    {'erro': 'Você não tem acesso.'}
+                )
 
             return Response({
                 'mensagem': f'Usuário {usuario.username} adicionado à torre {torre.titulo}',
@@ -169,17 +175,31 @@ class TorresViewSet(viewsets.ModelViewSet):
         torre = self.get_object()
         usuario_id = request.data.get('usuario_id')
         
+        if not request.user.is_superuser and request.user not in torre.usuarios_autorizados.all():
+            return Response(
+                {'erro': 'Você não tem acesso a esta torre'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
         try:
             usuario = User.objects.get(id=usuario_id)
+            mensagem = ""
             
             if usuario == torre.criador:
                 if request.user.is_superuser:
-                    mensagem = f'AVISO: Criador {usuario.username} removido da própria torre por administrador'
+                    mensagem = f'AVISO: Criador {usuario.username} removido da torre por administrador'
                 else:
-                    mensagem = 'Apenas administradores podem remover o criador da torre'
-            else:
+                    return Response(
+                        {'erro': 'Sem acesso a torre'},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
+            elif request.user.is_superuser:
                 mensagem = f'Usuário {usuario.username} removido da torre {torre.titulo}'
-
+            else:
+                return Response(
+                    {'erro': 'Admin não pode ser removido.'}
+                )
+            
             torre.usuarios_autorizados.remove(usuario)
 
             return Response({

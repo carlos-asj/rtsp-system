@@ -147,8 +147,10 @@ class TorresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Torres
         fields = ["id", "titulo", "cams_torres", "cams_details", "add_cams_torre", "usuarios_autorizados", "total_users", "criador", "created_at"]
-        extra_kwargs = {'criador': {'read_only': True},
-                        'usuarios_autorizados': {'write_only': True}}
+        extra_kwargs = {
+            'criador': {'read_only': True},
+            'created_at': {'read_only': True}
+        }
         
     def get_total_users(self, obj):
         return obj.usuarios_autorizados.count()
