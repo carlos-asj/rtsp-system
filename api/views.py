@@ -128,8 +128,100 @@ class TorresViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         user = self.request.user
-        return Torres.objects.filter(usuarios_autorizados=user).distinct()
+        if user.is_superuser:
+            return Torres.objects.all()
+        else:  
+            return Torres.objects.filter(usuarios_autorizados=user).distinct()
+        
+    def get_permissions(self):
+        if self.action in ['add_user', 'remove_user', 'list_users']:
+            return [permissions.IsAdminUser()]
+        return [permissions.IsAuthenticated()]
     
     def perform_create(self, serializer):
-        serializer.save(criador=self.request.user)
+        torre = serializer.save(criador=self.request.user)
+        torre.usuarios_autorizados.add(self.request.user)
+        
+    @action(detail=True, methods=['post'])
+    def add_user(self, request, pk=None):
+        torre = self.get_object()
+        usuario_id = request.data.get('usuario_id')
+        
+        try:
+            usuario = User.objects.get(id=usuario_id)
+
+            torre.usuarios_autorizados.add(usuario)
+
+            return Response({
+                'mensagem': f'Usuário {usuario.username} adicionado à torre {torre.titulo}',
+                'torre': torre.titulo,
+                'usuario_adicionado': usuario.username,
+                'total_usuarios_autorizados': torre.usuarios_autorizados.count()
+            })
+        except User.DoesNotExist:
+            return Response(
+                {'erro': 'Usuário não encontrado'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+    @action(detail=True, methods=['post'])
+    def remove_user(self, request, pk=None):
+        torre = self.get_object()
+        usuario_id = request.data.get('usuario_id')
+        
+        try:
+            usuario = User.objects.get(id=usuario_id)
+            
+            if usuario == torre.criador:
+                if request.user.is_superuser:
+                    mensagem = f'AVISO: Criador {usuario.username} removido da própria torre por administrador'
+                else:
+                    mensagem = 'Apenas administradores podem remover o criador da torre'
+            else:
+                mensagem = f'Usuário {usuario.username} removido da torre {torre.titulo}'
+
+            torre.usuarios_autorizados.remove(usuario)
+
+            return Response({
+                'mensagem': mensagem,
+                'torre': torre.titulo,
+                'usuario_removido': usuario.username,
+                'total_usuarios_autorizados': torre.usuarios_autorizados.count()
+            })
+            
+        except User.DoesNotExist:
+            return Response(
+                {'erro': 'Usuário não encontrado'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+    
+    @action(detail=True, methods=['get'])
+    def list_users(self, request, pk=None):
+        torre = self.get_object()
+
+        usuarios_autorizados = torre.usuarios_autorizados.all()
+        usuarios_disponiveis = User.objects.exclude(id__in=usuarios_autorizados.values('id'))
+
+        return Response({
+            'torre': {
+                'id': torre.id,
+                'titulo': torre.titulo,
+                'criado_por': torre.criador
+            },
+            'usuarios_autorizados': [
+                {
+                    'id': user.id,
+                    'username': user.username,
+                    'email': user.email,
+                    'is_superuser': user.is_superuser
+                } for user in usuarios_autorizados
+            ],
+            'usuarios_disponiveis': [
+                {
+                    'id': user.id,
+                    'username': user.username,
+                    'email': user.email
+                } for user in usuarios_disponiveis
+            ]
+        })
     

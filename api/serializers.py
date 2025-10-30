@@ -133,19 +133,25 @@ class CamerasSerializer(serializers.ModelSerializer):
     
 class TorresSerializer(serializers.ModelSerializer):
     criador = serializers.CharField(source='user_torres.username', read_only=True)
-    cams_torres = CamerasSerializer(many=True, read_only=True, source='cameras_torre') # 'cameras_torre' related_name do campo torre_atual
+    cams_torres = serializers.PrimaryKeyRelatedField(many=True, queryset=Cameras.objects.all(), required=False) # 'cameras_torre' related_name do campo torre_atual
+    cams_details = CamerasSerializer(source='cams_torres', many=True, read_only=True)
+    
+    total_users = serializers.SerializerMethodField()
     
     add_cams_torre = serializers.ListField(
         child=serializers.IntegerField(),
         write_only=True,
         required=False
-       # help_text="Lista de IDs de câmeras para adicionar à torre"
     )
     
     class Meta:
         model = Torres
-        fields = ["id", "titulo", "cams_torres", "cams_details", "usuarios", "usuarios_autorizados", "criador", "created_at"]
+        fields = ["id", "titulo", "cams_torres", "cams_details", "add_cams_torre", "usuarios_autorizados", "total_users", "criador", "created_at"]
+        extra_kwargs = {'criador': {'read_only': True},
+                        'usuarios_autorizados': {'write_only': True}}
         
+    def get_total_users(self, obj):
+        return obj.usuarios_autorizados.count()
     
     def create(self, validated_data):
         usuarios_data = validated_data.pop('usuarios_autorizados', [])

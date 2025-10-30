@@ -43,8 +43,7 @@ class Endereco(models.Model):
     
 class Torres(models.Model):
     titulo = models.CharField(max_length=255, default="n/a")
-    cams_torres = models.ManyToManyField(Cameras, related_name="torres", blank=True)
-    usuarios = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_torres", null=True)
+    cams_torres = models.ManyToManyField(Cameras, related_name="cams_torres", blank=True)
     usuarios_autorizados = models.ManyToManyField(User, related_name="torres_acesso", blank=True)
     criador = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
