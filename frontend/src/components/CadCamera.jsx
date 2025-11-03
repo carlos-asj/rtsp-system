@@ -1,7 +1,7 @@
 import api from "../api";
 import React, { useState } from "react"
 
-function CadCamera() {
+function CadCamera({ onCameraCadastrada  }) {
     const [formData, setFormData] = useState({
         titulo: '',
         user: '',
@@ -28,7 +28,6 @@ function CadCamera() {
 
         try {
             const response = await api.post('/api/cameras/', formData);
-            console.log('Item cadastrado:', response.data);
             
             // LIMPA O FORMULÁRIO
             setFormData({
@@ -40,6 +39,10 @@ function CadCamera() {
                 ns: '',
                 mac: ''
             });
+
+            if (onCameraCadastrada) {
+                onCameraCadastrada();
+            }
             
         } catch (error) {
             console.error('Erro ao cadastrar:', error);
@@ -54,31 +57,31 @@ function CadCamera() {
         <form onSubmit={handleSubmit}>
             <label htmlFor="titulo">Título:</label>
             <br />
-            <input type="text" id="titulo" name="titulo" required onChange={handlChange}/>
+            <input type="text" id="titulo" name="titulo" value={formData.titulo} required onChange={handlChange}/>
             <br />
             <label htmlFor="user">Usuário:</label>
             <br />
-            <input type="text" id="user" name="user" required onChange={handlChange}/>
+            <input type="text" id="user" name="user" value={formData.user} required onChange={handlChange}/>
             <br />
             <label htmlFor="senha">Senha:</label>
             <br />
-            <input type="password" id="senha" name="senha" required onChange={handlChange}/>
+            <input type="password" id="senha" name="senha" value={formData.senha} required onChange={handlChange}/>
             <br />
             <label htmlFor="porta_rtsp">Porta RTSP:</label>
             <br />
-            <input type="text" id="porta_rtsp" name="porta_rtsp" required onChange={handlChange}/>
+            <input type="text" id="porta_rtsp" name="porta_rtsp" value={formData.porta_rtsp} required onChange={handlChange}/>
             <br />
             <label htmlFor="dominio">Domínio:</label>
             <br />
-            <input type="text" id="dominio" name="dominio" required onChange={handlChange}/>
+            <input type="text" id="dominio" name="dominio" value={formData.dominio} required onChange={handlChange}/>
             <br />
             <label htmlFor="ns">N/S:</label>
             <br />
-            <input type="text" id="ns" name="ns" onChange={handlChange}/>
+            <input type="text" id="ns" name="ns" value={formData.ns} onChange={handlChange}/>
             <br />
             <label htmlFor="mac">MAC:</label>
             <br />
-            <input type="text" id="mac" name="mac" onChange={handlChange}/>
+            <input type="text" id="mac" name="mac" value={formData.mac} onChange={handlChange}/>
             <br />
             <button type="submit" disabled={loading}>
                 {loading ? 'Cadastrando...' : 'Cadastrar'}

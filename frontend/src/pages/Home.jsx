@@ -15,7 +15,7 @@ function Home() {
 
     useEffect(() => {
         getCameras();
-    }, []);
+    }, [refreshList]);
 
     const getCameras = async () => {
         try {            
@@ -40,8 +40,9 @@ function Home() {
 
     const deleteCamera = (id) => {
         api.delete(`api/cameras/${id}/`).then((res) => {
-            if (res.status === 204);
-            else alert("Falha ao deletar câmera.");
+            if (res.status === 204){
+                setRefreshList(prev => !prev)
+            } else alert("Falha ao deletar câmera.");
             getCameras();
         }).catch((err) => alert(err));
     }

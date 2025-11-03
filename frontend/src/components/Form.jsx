@@ -31,15 +31,24 @@ function Form({ route, method }){
         }
     };
 
+    const handleRegister = () => {
+        navigate('/register')
+    }
+
     return (
-        <form onSubmit={handleSubmit} className="form-container">
-            <h1>{name}</h1>
-            <input className="form-input" type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
-            <input className="form-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            <button type="submit" disabled={loading}>
-                {loading ? 'Carregando...' : 'Entrar'}
+        <div>
+            <form onSubmit={handleSubmit} className="form-container">
+                <h1>{name}</h1>
+                <input className="form-input" type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
+                <input className="form-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                <button type="submit" disabled={loading}>
+                    {loading ? 'Carregando...' : 'Entrar'}
+                </button>
+            </form>
+            <button onClick={handleRegister}>
+                Registrar
             </button>
-        </form>
+        </div>
     )
 }
 

@@ -1,21 +1,44 @@
 import React from "react";
 
 function ListCamera({ camera, onDelete }) {
-    const formattedDate = new Date(camera.created_at).toLocaleDateString("pt-BR");
+    if (!camera) {
+        return <div>Erro: Dados da câmera não disponíveis</div>;
+    }
+
+    const formattedDate = camera.created_at 
+        ? new Date(camera.created_at).toLocaleDateString("pt-BR")
+        : "Data não disponível";
+
+    const linksRTSP = camera.cam_id || [];
+    const hasLinks = Array.isArray(linksRTSP) && linksRTSP.length > 0;
 
     return (
         <div>
-            <p>{camera.titulo}</p>
-            <p>{camera.user}</p>
-            <p>{camera.senha}</p>
-            <p>{camera.porta_rtsp}</p>
-            <p>{camera.dominio}</p>
-            <p>{camera.ns}</p>
-            <p>{camera.mac}</p>
-            <p>{formattedDate}</p>
-            <button onClick={() => onDelete(camera.id)}>Delete</button>
+            <h3>{camera.titulo || "Sem título"}</h3>
+            <p>Usuário: {camera.user || "Não informado"}</p>
+            <p>Domínio: {camera.dominio || "Não informado"}</p>
+            <p>Porta RTSP: {camera.porta_rtsp || "Não informada"}</p>
+            <p>N/S: {camera.ns || "Não informado"}</p>
+            <p>MAC: {camera.mac || "Não informado"}</p>
+            
+            {/* ✅ LINKS RTSP COM VERIFICAÇÃO SEGURA */}
+            <div>
+                Links RTSP:
+                    {linksRTSP.map(link => (
+                        <p href={link.rtsp}>
+                            {link.rtsp || "Link não disponível"}
+                        </p>
+                    ))}
+            </div>
+
+            <p><strong>Data de criação:</strong> {formattedDate}</p>
+            <button 
+                onClick={() => onDelete(camera.id)}
+            >
+                Deletar
+            </button>
         </div>
-    )
+    );
 }
 
 export default ListCamera;
