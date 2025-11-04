@@ -2,8 +2,11 @@ import { useState } from "react";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
+import "../styles/Form.css"
+import LoadingIndicator from "./LoadingIndicator";
 
 function Form({ route, method }){
+    
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false)
@@ -32,24 +35,34 @@ function Form({ route, method }){
     };
 
     const handleRegister = () => {
-        navigate('/register')
-    }
+        navigate('/register');
+    };
 
     return (
-        <div>
-            <form onSubmit={handleSubmit} className="form-container">
-                <h1>{name}</h1>
-                <input className="form-input" type="text" value={username} onChange={(e) => setUsername(e.target.value)}/>
-                <input className="form-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                <button type="submit" disabled={loading}>
-                    {loading ? 'Carregando...' : 'Entrar'}
-                </button>
-            </form>
-            <button onClick={handleRegister}>
-                Registrar
-            </button>
+        <div className="">
+            <div className="login-container inset-shadow-[-2px_2px_7px_rgba(255,255,255,0.8)]" >
+                <form onSubmit={handleSubmit} className="form-group">
+                    <h1>{name}</h1>
+                    <label>Usuário</label>
+                    <input className="form-input" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                    <br />
+                    <label>Senha</label>
+                    <input className="form-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    {loading && <LoadingIndicator />}
+                    <button type="submit" className="btn-entrar">
+                        {method === "login" ? "Entrar" : "Registrar"}
+                    </button>
+                </form>
+                {method !== "register" && (
+                    <div className="registro-link" onClick={handleRegister}>
+                        Não possui uma conta? <a>
+                            Registre-se
+                        </a>
+                    </div>
+                )}
+            </div>
         </div>
     )
 }
 
-export default Form
+export default Form;

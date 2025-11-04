@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ListCamera from "../components/ListCamera";
 import CadCamera from "../components/CadCamera";
+import DashCams from "../components/DashCams";
 import api from "../api";
+import "../styles/Home.css";
 
 function Home() {
 
@@ -49,15 +51,17 @@ function Home() {
 
     return (
         <div>
-            <div>
-                <h3>Câmeras</h3>
+            <div className="main-container">
+                <h3>CÂMERAS</h3>
                 {cameras.map((camera) => (
-                    <ListCamera camera={camera} onDelete={deleteCamera} key={camera.id} atualizar={refreshList} />
+                    <DashCams camera={camera} onDelete={deleteCamera} key={camera.id} atualizar={refreshList} />
                 ))}
             </div>
-            <div>
+            <div className="form-container">
                 <h3>Adicionar câmera</h3>
-                <CadCamera route="api/cameras/" method="cadastro" onCameraCadastrada={handleCameraAdicionada} />
+                <div>
+                    <CadCamera route="api/cameras/" method="cadastro" onCameraCadastrada={handleCameraAdicionada} />
+                </div>
             </div>
         </div>
 

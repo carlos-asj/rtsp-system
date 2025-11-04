@@ -1,0 +1,18 @@
+.cam-form > .cam-form:last-child {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 1728px) {
+    .cam-form {
+        padding: 10px;
+    }
+    
+    .cam-form > .cam-form:first-child {
+        grid-template-columns: 1fr;
+    }
+    
+}

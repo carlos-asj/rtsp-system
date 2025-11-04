@@ -1,5 +1,6 @@
 import api from "../api";
 import React, { useState } from "react"
+import "../styles/CadCam.css"
 
 function CadCamera({ onCameraCadastrada  }) {
     const [formData, setFormData] = useState({
@@ -54,7 +55,7 @@ function CadCamera({ onCameraCadastrada  }) {
     };
 
     return(
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="cam-form">
             <label htmlFor="titulo">Título:</label>
             <br />
             <input type="text" id="titulo" name="titulo" value={formData.titulo} required onChange={handlChange}/>
