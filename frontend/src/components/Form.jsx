@@ -38,16 +38,20 @@ function Form({ route, method }){
         navigate('/register');
     };
 
+    const handleLogin = () => {
+        navigate('/login');
+    };
+
     return (
         <div className="">
-            <div className="login-container inset-shadow-[-2px_2px_7px_rgba(255,255,255,0.8)]" >
+            <div className="login-container" >
                 <form onSubmit={handleSubmit} className="form-group">
                     <h1>{name}</h1>
                     <label>Usuário</label>
-                    <input className="form-input" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                    <input className="form-input" type="text" required value={username} onChange={(e) => setUsername(e.target.value)} />
                     <br />
                     <label>Senha</label>
-                    <input className="form-input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                    <input className="form-input" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
                     {loading && <LoadingIndicator />}
                     <button type="submit" className="btn-entrar">
                         {method === "login" ? "Entrar" : "Registrar"}
@@ -57,6 +61,14 @@ function Form({ route, method }){
                     <div className="registro-link" onClick={handleRegister}>
                         Não possui uma conta? <a>
                             Registre-se
+                        </a>
+                    </div>
+                )}
+
+                {method !== "login" && (
+                    <div className="registro-link" onClick={handleLogin}>
+                        Já possui uma conta? <a>
+                            Login
                         </a>
                     </div>
                 )}

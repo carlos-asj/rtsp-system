@@ -55,39 +55,42 @@ function CadCamera({ onCameraCadastrada  }) {
     };
 
     return(
-        <form onSubmit={handleSubmit} className="cam-form">
-            <label htmlFor="titulo">Título:</label>
-            <br />
-            <input type="text" id="titulo" name="titulo" value={formData.titulo} required onChange={handlChange}/>
-            <br />
-            <label htmlFor="user">Usuário:</label>
-            <br />
-            <input type="text" id="user" name="user" value={formData.user} required onChange={handlChange}/>
-            <br />
-            <label htmlFor="senha">Senha:</label>
-            <br />
-            <input type="password" id="senha" name="senha" value={formData.senha} required onChange={handlChange}/>
-            <br />
-            <label htmlFor="porta_rtsp">Porta RTSP:</label>
-            <br />
-            <input type="text" id="porta_rtsp" name="porta_rtsp" value={formData.porta_rtsp} required onChange={handlChange}/>
-            <br />
-            <label htmlFor="dominio">Domínio:</label>
-            <br />
-            <input type="text" id="dominio" name="dominio" value={formData.dominio} required onChange={handlChange}/>
-            <br />
-            <label htmlFor="ns">N/S:</label>
-            <br />
-            <input type="text" id="ns" name="ns" value={formData.ns} onChange={handlChange}/>
-            <br />
-            <label htmlFor="mac">MAC:</label>
-            <br />
-            <input type="text" id="mac" name="mac" value={formData.mac} onChange={handlChange}/>
-            <br />
-            <button type="submit" disabled={loading}>
-                {loading ? 'Cadastrando...' : 'Cadastrar'}
-            </button>
-        </form>
+        <div className="cad-container">
+            <h1 className="title2">CADASTRO DE CÂMERAS</h1>
+            <form onSubmit={handleSubmit} className="cam-form">
+                <label className="lbl-cam" htmlFor="titulo">Título:</label>
+                
+                <input className="inpt-cam" type="text" id="titulo" name="titulo" value={formData.titulo} required onChange={handlChange}/>
+                
+                <label className="lbl-cam" htmlFor="user">Usuário:</label>
+                
+                <input className="inpt-cam" type="text" id="user" name="user" value={formData.user} required onChange={handlChange}/>
+                
+                <label className="lbl-cam" htmlFor="senha">Senha:</label>
+                
+                <input className="inpt-cam" type="password" id="senha" name="senha" value={formData.senha} required onChange={handlChange}/>
+                
+                <label className="lbl-cam" htmlFor="porta_rtsp">Porta RTSP:</label>
+                
+                <input className="inpt-cam" type="text" id="porta_rtsp" name="porta_rtsp" value={formData.porta_rtsp} required onChange={handlChange}/>
+                
+                <label className="lbl-cam" htmlFor="dominio">Domínio:</label>
+                
+                <input className="inpt-cam" type="text" id="dominio" name="dominio" value={formData.dominio} required onChange={handlChange}/>
+                
+                <label className="lbl-cam" htmlFor="ns">N/S:</label>
+                
+                <input className="inpt-cam" type="text" id="ns" name="ns" value={formData.ns} onChange={handlChange}/>
+                
+                <label className="lbl-cam" htmlFor="mac">MAC:</label>
+                
+                <input className="inpt-cam" type="text" id="mac" name="mac" value={formData.mac} onChange={handlChange}/>
+                
+                <button className="cad-btn" type="submit" disabled={loading}>
+                    {loading ? 'Cadastrando...' : 'Cadastrar'}
+                </button>
+            </form>
+        </div>
     )
 };
 

@@ -1,18 +1,33 @@
-.cam-form > .cam-form:last-child {
-    background: white;
-    padding: 25px;
+.cam-form {
+    background: #393a3e;
+    padding-left: 10px;
+    padding-right: 10px;
     border-radius: 10px;
-    border: 1px solid #e0e0e0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 20px 50px 20px 50px;
+    width: 30vw;
+    border: 1px solid #6d6d6f;
 }
 
-@media (max-width: 1728px) {
-    .cam-form {
-        padding: 10px;
-    }
-    
-    .cam-form > .cam-form:first-child {
-        grid-template-columns: 1fr;
-    }
-    
+.lbl-cam {
+    color: white;
+}
+
+.inpt-cam[type="text"], .inpt-cam[type="password"] {
+    background-color: #56575c;
+    border: 1px solid #6d6d6f;
+}
+
+.inpt-cam:focus {
+    background: #6d6d6f;
+}
+
+/* BOTÕES */
+
+.cad-btn {
+    color: white;
+    margin-top: 15px;
+    padding: 10px 60px;
+    background-color: rgb(43, 151, 43);
+    border-radius: 10px;
 }

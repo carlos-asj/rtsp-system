@@ -1,84 +1,126 @@
-/* Container principal */
-.main-container {
-    max-width: 1500px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.form-container {
-    background: #f8f9fa;
-    padding: 25px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Títulos das seções */
-h3 {
-    color: #333;
-    font-weight: 700;
-    border-bottom: 2px solid #007bff;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-    font-size: 24px;
-}
-
-.title {
-    color: black;
-    font-size: 20px;
-}
-
-/* Container da lista de câmeras */
-.camera-item > .camera-item:first-child {
-    background: #f8f9fa;
-    padding: 25px;
-    border-radius: 10px;
-    margin-bottom: 30px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Grid para as câmeras */
-.camera-item > .camera-item:first-child {
-    display: grid;
-    grid-template-columns: 1fr, auto;
-    gap: 15px;
-}
-
-
-/* Estilo para cada item de câmera (assumindo que ListCamera renderiza uma div) */
-.camera-item {
-    background: white;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-/* Estilo para informações da câmera */
-.camera-info p {
-    color: #666;
-    margin: 5px 0;
-    font-size: 14px;
-}
-
-/* Estado quando não há câmeras */
-.empty-state {
-    text-align: center;
-    color: #666;
-    padding: 40px;
-    font-style: italic;
-}
-
-/* Responsividade */
-@media (max-width: 1728px) {
-    .camera-item {
-        padding: 10px;
+/* @media (min-width: 500px) and (max-width: 1728px){ */
+    .body {
+        width: 90vw;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
     }
-    
-    .camera-item > .camera-item:first-child {
-        grid-template-columns: 1fr;
+
+    .container-listcam {
+        background-color: white;
+        border-radius: 15px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 15px;
     }
-    
-}
+
+    .camera-list {
+        background-color: white;
+        padding: 8px;
+        border-radius: 15px;
+        gap: 10px;
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+        margin-bottom: 20px;
+        overflow-wrap: break-word;
+    }
+
+    .cam-full {
+        max-width: 500px;
+    }
+
+    /* TITULOS */
+
+    .title {
+        font-size: 30px;
+        font-weight: 800;
+    }
+
+    .title2 {
+        font-size: 20px;
+        font-weight: bold;
+    }
+
+    .title3 {
+        font-weight: 600;
+        font-size: 19px;
+    }
+
+    .subtitle {
+        color: gray;
+    }
+
+    .cam-tit {
+        border-bottom: 1px solid black;
+    }
+
+    /* BOTÕES */
+
+    .btn-back {
+        color: white;
+        cursor: pointer;
+        border-radius: 7px;
+        padding: 10px 30px;
+        background-color: #010A16;
+        margin-top: 0;
+        margin-bottom: 10px;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .btn-back:hover {
+        background-color: #091a2f;
+    }
+
+    .btn-logout {
+        color: white;
+        padding: 10px 35px 10px 35px;
+        background-color: #010A16;
+        cursor: pointer;
+        border-radius: 10px;
+        margin-top: 0;
+        margin-bottom: 10px;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .btn-logout:hover {
+        background-color: #091a2f;
+    }
+
+    .btn-cadcams {
+        color: white;
+        padding: 10px 50px 10px 50px;
+        background-color: green;
+        border-radius: 10px;
+        border: 1px solid rgba(29, 96, 0, 0.5);
+    }
+
+    .btn-cadcams:hover {
+        cursor: pointer;
+        transform: scale(1.05);
+    }
+
+    .btn-del {
+        padding: 10px 70px 10px 70px;
+        background-color: rgb(184, 36, 36);
+        border-radius: 10px;
+        color: white;
+        margin-top: 15px;
+    }
+
+    .btn-del:hover {
+        cursor: pointer;
+        transform: scale(1.05);
+    }
+
+    .btn-cams {
+        text-align: center;
+        cursor: pointer;
+        padding: 7px;
+        border-bottom: solid black;
+    }
+
+/* } */

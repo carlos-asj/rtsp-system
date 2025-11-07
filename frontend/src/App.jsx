@@ -1,10 +1,12 @@
 // import React, { useEffect, useState } from "react";
-import ProtectedRoute from './components/ProtectedRoute'
-import Home from './pages/Home'
-import Login from './pages/Login'
-import Register from './pages/Register'
-import NotFound from './pages/NotFound'
-import './App.css'
+import ProtectedRoute from './components/ProtectedRoute';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import NotFound from './pages/NotFound';
+import Cameras from "./pages/Cameras";
+import Cadastro from "./pages/Cadastro";
+import './App.css';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 function Logout() {
@@ -27,6 +29,14 @@ function App() {
         <Route path="/" element={
           <ProtectedRoute>
             <Home />
+          </ProtectedRoute>} />
+        <Route path="/cameras" element={
+          <ProtectedRoute>
+            <Cameras />
+          </ProtectedRoute>} />
+        <Route path="/cadastro" element={
+          <ProtectedRoute>
+            <Cadastro />
           </ProtectedRoute>} />
         <Route path="*" element={<NotFound />} />
       </Routes>

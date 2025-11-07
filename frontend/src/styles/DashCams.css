@@ -1,0 +1,17 @@
+.main-container{
+    color: black;
+    border-radius: 15px;
+    background-color: white;
+    padding: 15px;
+    display: inline-block;
+}
+
+.camera-item {
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 2px 5px 7px rgba(0, 0, 0, 0.15);
+}
+
+.camera-info {
+
+}

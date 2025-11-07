@@ -1,23 +1,20 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ListCamera from "../components/ListCamera";
-import CadCamera from "../components/CadCamera";
 import DashCams from "../components/DashCams";
+import DashTorres from "../components/DashTorres";
 import api from "../api";
 import "../styles/Home.css";
 
 function Home() {
 
     const [cameras, setCameras] = useState([]);
-    const [refreshList, setRefreshList] = useState(false);
-    
-    const handleCameraAdicionada = () => {
-        setRefreshList(prev => !prev);
-    }
+    const [torres, setTorres] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         getCameras();
-    }, [refreshList]);
+        getTorres();
+    }, []);
 
     const getCameras = async () => {
         try {            
@@ -40,27 +37,53 @@ function Home() {
         }
     };
 
-    const deleteCamera = (id) => {
-        api.delete(`api/cameras/${id}/`).then((res) => {
-            if (res.status === 204){
-                setRefreshList(prev => !prev)
-            } else alert("Falha ao deletar câmera.");
-            getCameras();
-        }).catch((err) => alert(err));
+    const getTorres = async () => {
+        try {
+            const response = await api.get("/api/torres/");
+            setTorres(response.data);
+        } catch (error) {
+            if (error.response?.status === 401) {
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
+
+                window.location.href = '/login';
+            } else {
+                alert(`Erro: ${error.message}`);
+            }
+        }
     }
+
+    const handleCameras = () => {
+        navigate('/cameras');
+    };
+
+    const handleLogout = () => {
+        navigate('/logout');
+    };
 
     return (
         <div>
-            <div className="main-container">
-                <h3>CÂMERAS</h3>
-                {cameras.map((camera) => (
-                    <DashCams camera={camera} onDelete={deleteCamera} key={camera.id} atualizar={refreshList} />
-                ))}
-            </div>
-            <div className="form-container">
-                <h3>Adicionar câmera</h3>
-                <div>
-                    <CadCamera route="api/cameras/" method="cadastro" onCameraCadastrada={handleCameraAdicionada} />
+            <button onClick={handleLogout} className="btn-logout">Logout</button>
+            <div>
+                <div className="main-container">
+                    <button className="btn-cams" onClick={handleCameras}>
+                        <a className="title">CÂMERAS</a>
+                    </button>
+                    <div className="camera">
+                        {cameras.map((camera) => (
+                            <DashCams camera={camera} key={camera.id} />
+                        ))}
+                    </div>
+                </div>
+                <div className="main-container">
+                    <button className="btn-cams">
+                        <a className="title">TORRES</a>
+                    </button>
+                    <div className="camera">
+                        {torres.map((torre) => (
+                            <DashTorres torre={torre} key={torre.id} />
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>
