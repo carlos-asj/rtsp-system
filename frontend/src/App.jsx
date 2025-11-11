@@ -6,6 +6,8 @@ import Register from './pages/Register';
 import NotFound from './pages/NotFound';
 import Cameras from "./pages/Cameras";
 import Cadastro from "./pages/Cadastro";
+import CadTorre from './pages/CadTorre';
+import Torres from './pages/Torres';
 import './App.css';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
@@ -30,14 +32,27 @@ function App() {
           <ProtectedRoute>
             <Home />
           </ProtectedRoute>} />
+
         <Route path="/cameras" element={
           <ProtectedRoute>
             <Cameras />
           </ProtectedRoute>} />
+
         <Route path="/cadastro" element={
           <ProtectedRoute>
             <Cadastro />
           </ProtectedRoute>} />
+
+        <Route path="/torres" element={
+          <ProtectedRoute>
+            <Torres />
+          </ProtectedRoute>} />
+
+        <Route path="/cadtorre" element={
+          <ProtectedRoute>
+            <CadTorre />
+          </ProtectedRoute>} />
+
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

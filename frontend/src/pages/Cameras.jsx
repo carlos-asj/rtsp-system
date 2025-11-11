@@ -47,7 +47,7 @@ function Cameras() {
             .delete(`/api/cameras/${id}/`)
             .then((res) => {
                 if (res.status === 204) alert("Câmera deletada!");
-                else alert("Failed to delete note.");
+                else alert("Falha ao deletar câmera.");
                 getCameras();
             })
             .catch((error) => alert(error));
@@ -68,7 +68,7 @@ function Cameras() {
                     <ListCamera camera={camera} key={camera.id} onDelete={deleteCamera} />
                 ))}
             </div>
-            <button className="btn-cadcams" onClick={handleCadCams}>Adicionar câmeras</button>
+            <button className="btn-cadcams" onClick={handleCadCams}>Adicionar</button>
         </div>
         </div>
     )
