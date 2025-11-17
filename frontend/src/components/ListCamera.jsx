@@ -54,18 +54,20 @@ function ListCamera({ camera, onDelete }) {
                             <div className="cam-tit">
                                 <a className="title3">{camera.titulo || "Sem título"}</a>
                             </div>
-                            <p><strong>Usuário:</strong> {camera.user || "Não informado"}</p>
-                            <p><strong>Domínio:</strong> {camera.dominio || "Não informado"}</p>
-                            <p><strong>Porta RTSP:</strong> {camera.porta_rtsp || "Não informada"}</p>
-                            <p><strong>N/S:</strong> {camera.ns || "Não informado"}</p>
-                            <p><strong>MAC:</strong> {camera.mac || "Não informado"}</p>
-                            {linkRTSP.map(link => ( // BUSCA NA TABELA DE LINKS O LINK CORRESPONDENTE A CÂMERA ESPECÍFICA
-                                <p key={link.rtsp}>
-                                    <strong>Link RTSP:</strong> {link.rtsp || "Link não disponível"}
-                                </p>
-                            ))}
-                            <p><strong>Data de criação:</strong> {formattedDate}</p>
-                            <div className="camera-actions">
+                            <div className="content">
+                                <p><strong>Usuário:</strong> {camera.user || "Não informado"}</p>
+                                <p><strong>Domínio:</strong> {camera.dominio || "Não informado"}</p>
+                                <p><strong>Porta RTSP:</strong> {camera.porta_rtsp || "Não informada"}</p>
+                                <p><strong>N/S:</strong> {camera.ns || "Não informado"}</p>
+                                <p><strong>MAC:</strong> {camera.mac || "Não informado"}</p>
+                                {linkRTSP.map(link => ( // BUSCA NA TABELA DE LINKS O LINK CORRESPONDENTE A CÂMERA ESPECÍFICA
+                                    <p key={link.rtsp}>
+                                        <strong>Link RTSP:</strong> {link.rtsp || "Link não disponível"}
+                                    </p>
+                                ))}
+                                <p><strong>Data de criação:</strong> {formattedDate}</p>
+                            </div>
+                            <div className="cont-del">
                                 <button className="btn-del"
                                     onClick={() => onDelete(camera.id)}
                                 >

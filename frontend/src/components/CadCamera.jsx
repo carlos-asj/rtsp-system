@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import api from "../api";
 import React, { useState } from "react"
 import "../styles/CadCam.css"
@@ -44,6 +45,8 @@ function CadCamera({ onCameraCadastrada  }) {
             if (onCameraCadastrada) {
                 onCameraCadastrada();
             }
+            
+            alert('Câmera cadastrada!')
             
         } catch (error) {
             console.error('Erro ao cadastrar:', error);

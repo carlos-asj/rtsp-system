@@ -1,0 +1,19 @@
+.cad-torre{
+    color: white;
+}
+
+label {
+    color: white;
+}
+
+input[type="text"]{
+    color: black;
+}
+
+select{
+    width: 100%;
+}
+
+.container-torres{
+    display: inline-block;
+}

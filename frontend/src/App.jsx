@@ -8,6 +8,7 @@ import Cameras from "./pages/Cameras";
 import Cadastro from "./pages/Cadastro";
 import CadTorre from './pages/CadTorre';
 import Torres from './pages/Torres';
+import EditTorre from './pages/EditTorre';
 import './App.css';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
@@ -46,6 +47,11 @@ function App() {
         <Route path="/torres" element={
           <ProtectedRoute>
             <Torres />
+          </ProtectedRoute>} />
+
+        <Route path="/edit-torre" element={
+          <ProtectedRoute>
+            <EditTorre />
           </ProtectedRoute>} />
 
         <Route path="/cadtorre" element={

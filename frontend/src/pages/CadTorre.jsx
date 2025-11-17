@@ -14,8 +14,8 @@ function CadTorre() {
 
     return(
         <div>
-            <button className="btn-back"onClick={handleBack}>Voltar</button>
-            <button className="btn-logout"onClick={handleLogout}>Logout</button>
+            <button className="btn-back" onClick={handleBack}>Voltar</button>
+            <button className="btn-logout" onClick={handleLogout}>Logout</button>
             <FormTorre />
         </div>
     )

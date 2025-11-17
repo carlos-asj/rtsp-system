@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 function DashTorres({ torre }) {
     const [torres, setTorres] = useState([]);
     const [cameras, setCameras] = useState([]);
-    const navigate = useNavigate();
 
     useEffect(() => {
         getTorres();
@@ -63,35 +62,25 @@ function DashTorres({ torre }) {
     const cams_torres = torre.cams_torres || [];
     const cams_details = torre.cams_details || [];
     const hasCams = Array.isArray(torres) && torres.length > 0;
-    // console.log("Dados da torre:", torre);
-    // console.log("Câmeras:", cams_torres);
-    // console.log("Tipo das câmeras:", typeof cams_torres);
 
     return (
         <div className="main-container">
             <div className="camera-item">
                 <div className="camera-info">
                     <h3 className="title2">{torre.titulo || "Sem título"}</h3>
-                    <div className="cams-torres">
-                        {torres.map(torre => {
-                            const cams = torre.cams_details || [];
-                            return (
-                                <div key={torre.id}>
-                                    {cams.length > 0 ? (
-                                        cams.map((cam, index) => (
-                                            <div key={cam.id || index}>
-                                                <p><strong>Câmera {index + 1}: </strong>
-                                                {cam.titulo || "Não informado"}</p>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <p>Câmeras não disponíveis para esta torre</p>
-                                    )}
+                    <div className="subtitle">
+
+                         {cams_details.length > 0 ? (
+                            cams_details.map((cam, index) => (
+                                <div key={cam.id || index}>
+                                    {cam.titulo || "Não informado"}
                                 </div>
-                            );
-                        })}
+                            ))
+                         ):(
+                            <p>Câmeras não disponíveis para esta torre.</p>
+                         )}
+
                     </div>
-                    <p className="subtitle"><strong>Data de criação:</strong> {formattedDate}</p>
                 </div>
             </div>
         </div>

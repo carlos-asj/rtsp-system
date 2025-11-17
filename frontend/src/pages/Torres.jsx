@@ -60,7 +60,7 @@ function Torres() {
                 <div className="title2">
                     TORRES ({torres.length})
                 </div>
-                <div className="container-listcam">
+                <div className="">
                     {torres.map((torre) => (
                         <ListTorres torre={torre} key={torre.id} onDelete={deleteTorre} />
                     ))}

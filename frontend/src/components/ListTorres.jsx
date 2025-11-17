@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
+import "../styles/FormTorre.css";
 
 function ListTorres({ torre, onDelete }) {
     const [torres, setTorres] = useState([]);
@@ -26,6 +28,10 @@ function ListTorres({ torre, onDelete }) {
         };
     };
 
+    const handleEdit = () => {
+        navigate('/edit-torre')
+    };
+
     if (!torre){
         return <div>Erro: Dados da torre não disponíveis</div>
     }
@@ -34,31 +40,31 @@ function ListTorres({ torre, onDelete }) {
     const cams_details = torre.cams_details || [];
 
     return (
-        <div className="cam-full">
-            <div className="camera-list">
-                {torres.map(torre => {
-                    const cams = torre.cams_details || [];
-                    return (
-                        <div key={torre.id} className="">
-                            <p><strong>Título: </strong>{torre.titulo}</p>
-                            {cams.length > 0 ? (
-                                cams.map((cam, index) => (
-                                    <div key={cam.id || index}>
-                                        <p><strong>Câmera {index + 1}: </strong>
-                                        {cam.titulo || "Não informado"}</p>
-                                    </div>
-                                ))
-                            ) : (
-                                <p>Câmeras não disponíveis para esta torre</p>
-                            )}
-                        </div>
-                    );
-                })}
-                <p><strong>Data de criação:</strong> {formattedDate}</p>
-                <div className="camera-actions">
-                    <button className="btn-del"onClick={() => onDelete(torre.id)}>
-                        Deletar
-                    </button>
+        <div className="main-container">
+            <div className="cam-full">
+                <div className="camera-list">
+                    <p className="cam-tit title2">{torre.titulo}</p>
+                    {cams_details.length > 0 ? (
+                        cams_details.map((cam, index) => (
+                            <div key={cam.id || index}>
+                                <p><strong>Câmera: </strong>
+                                {cam.titulo || "Não informado"}</p>
+                            </div>
+                        ))
+                    ):(
+                        <p>Câmeras não disponíveis para essa torre.</p>
+                    )}
+
+                    <p><strong>Data de criação:</strong> {formattedDate}</p>
+                    <div>
+                        <button className="btn-del" onClick={handleEdit}>
+                            Editar
+                        </button>
+                        <button className="btn-del" onClick={() => onDelete(torre.id)}>
+                            Deletar
+                        </button>
+                    </div>
+                        
                 </div>
             </div>
         </div>

@@ -16,6 +16,7 @@
 .inpt-cam[type="text"], .inpt-cam[type="password"] {
     background-color: #56575c;
     border: 1px solid #6d6d6f;
+    color: white;
 }
 
 .inpt-cam:focus {

@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DashCams from "../components/DashCams";
 import DashTorres from "../components/DashTorres";
-import ListTorres from "../components/ListTorres";
 import api from "../api";
 import "../styles/Home.css";
 
